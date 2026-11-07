@@ -1,0 +1,20 @@
+# Home Hub demo – the stack on the server (Portainer follows the `deploy` branch, where GitHub fills in the version).
+# Public: reached through Caddy at https://demo.reidhouse.kiwi – no Tailscale.
+
+services:
+  home-hub-demo:
+    image: ghcr.io/josiahreid/home-hub-demo:101e4d7
+    container_name: home-hub-demo
+    environment:
+      HOME_HUB_DEMO: "1"          # sample data, nightly reset, outside connections off
+      HOME_HUB_MODE: "demo"
+      HOSTNAME: "0.0.0.0"         # listen for Caddy (only on the server itself – see ports)
+    ports:
+      - "127.0.0.1:3100:3000"     # only Caddy on this server can reach it; change if Caddy runs in Docker
+    volumes:
+      - home-hub-demo-data:/data
+    restart: unless-stopped
+
+volumes:
+  home-hub-demo-data:
+    name: home-hub-demo-data
