@@ -53,7 +53,7 @@ jobs:
           docker volume create demo-check
           docker run -d --name demo-check -p 3000:3000 -e HOSTNAME=0.0.0.0 -e HOME_HUB_DEMO=1 -v demo-check:/data "$IMAGE:${{ steps.v.outputs.tag }}"
           node scripts/smoke-test.mjs http://127.0.0.1:3000 || { docker logs demo-check; exit 1; }
-          docker exec demo-check ls /data/demo-start.db
+          docker exec demo-check ls /data/demo-start-v2.db
           docker rm -f demo-check
       - name: Publish
         run: |

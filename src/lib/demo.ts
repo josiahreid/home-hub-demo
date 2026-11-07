@@ -21,7 +21,8 @@ export async function startDemo() {
   if (!DEMO || g.__homeHubDemo) return;
   g.__homeHubDemo = true;
   const { BACKUP_DIR, DATA_DIR, UPLOAD_DIR, db, getSetting, setSetting } = await import("./db");
-  const snapshot = path.join(DATA_DIR, "demo-start.db");
+  // the starting point; a new number when what the demo starts with changes, so a running demo picks it up
+  const snapshot = path.join(DATA_DIR, "demo-start-v2.db");
   if (!existsSync(snapshot)) {
     db.prepare("SELECT 1").get(); // opens the database, so it's set up before the sample data goes in
     try {
