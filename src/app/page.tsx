@@ -11,6 +11,7 @@ import { familyToday } from "@/lib/workout";
 import { findClashes, savingsNeeds, weeklyCapacity } from "@/lib/plans";
 import { loadPlan } from "@/lib/budget-plan";
 import { hasSampleData } from "@/lib/sample";
+import { DEMO } from "@/lib/demo";
 import { DeleteButton } from "@/components/buttons";
 import { clearSampleData } from "./actions";
 import { QuickGrocery } from "./quick-grocery";
@@ -49,7 +50,8 @@ async function Dashboard() {
   const { needs } = await savingsNeeds();
   const { clashes } = findClashes(needs, weeklyCapacity());
   const plan = await loadPlan();
-  const sample = await hasSampleData();
+  // the public demo is all sample data – no "remove it" notice there
+  const sample = !DEMO && (await hasSampleData());
   const todos = await all<{ id: number; title: string; due: string | null }>(
     "SELECT id, title, due FROM todos WHERE done_at IS NULL AND important = 1 ORDER BY due IS NULL, due, created_at DESC LIMIT 6");
   const giftHref = (await all<{ slug: string }>("SELECT slug FROM members WHERE (',' || features || ',') LIKE '%,wishlists,%' ORDER BY sort, id LIMIT 1"))

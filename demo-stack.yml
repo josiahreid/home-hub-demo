@@ -1,5 +1,5 @@
 # Home Hub demo – the stack on the server (Portainer follows the `deploy` branch, where GitHub fills in the version).
-# Public: reached through Caddy at https://demo.reidhouse.kiwi – no Tailscale.
+# Public: reached through Caddy at https://homehub-demo.reidhouse.kiwi – no Tailscale.
 
 services:
   home-hub-demo:
