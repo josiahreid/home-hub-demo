@@ -52,6 +52,18 @@ async function Menu({ mobile }: { mobile?: boolean }) {
   return mobile ? <PhoneMenu family={family} me={me} /> : <SideNav family={family} me={me} />;
 }
 
+// Read when the page is asked for, not when the app is built (the demo is switched on when its server starts).
+async function DemoBanner() {
+  await io();
+  if (!DEMO) return null;
+  return (
+    <div className="border-b border-info bg-info-soft px-4 py-2 text-center text-xs text-info print:hidden">
+      <strong>Demo</strong> – try anything: add, change, delete. Nothing here is real, and it all resets every night.
+      Bank feed, Telegram and phone notifications are switched off.
+    </div>
+  );
+}
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-NZ" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
@@ -66,12 +78,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <div className="sticky top-0 z-10 border-b border-line bg-bg/95 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur md:hidden print:hidden">
               <Suspense fallback={<PhoneMenu family={[]} me={null} />}><Menu mobile /></Suspense>
             </div>
-            {DEMO && (
-              <div className="border-b border-info bg-info-soft px-4 py-2 text-center text-xs text-info print:hidden">
-                <strong>Demo</strong> – try anything: add, change, delete. Nothing here is real, and it all resets every night.
-                Bank feed, Telegram and phone notifications are switched off.
-              </div>
-            )}
+            <Suspense fallback={null}><DemoBanner /></Suspense>
             <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
               <Suspense fallback={<Loading />}>
                 <RequestTime>{children}</RequestTime>
