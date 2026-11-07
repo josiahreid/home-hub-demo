@@ -3,7 +3,7 @@
 
 services:
   home-hub-demo:
-    image: ghcr.io/josiahreid/home-hub-demo:0b00b29
+    image: ghcr.io/josiahreid/home-hub-demo:05051f1
     container_name: home-hub-demo
     environment:
       HOME_HUB_DEMO: "1"          # sample data, nightly reset, outside connections off
