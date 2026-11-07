@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --surface-2: #f0eee9;
+  --ink: #1d1c1a;
+  --muted: #6b6862;
+  --line: #e3e0d9;
+  --accent: #2f6f5e;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2efe9;
+  --warn: #b45309;
+  --warn-soft: #fdf0dc;
+  --danger: #b42318;
+  --danger-soft: #fde8e6;
+  --info: #2f5f9e;
+  --info-soft: #e3ecf8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151514;
+    --surface: #1e1e1c;
+    --surface-2: #272724;
+    --ink: #ecebe7;
+    --muted: #9c9991;
+    --line: #34332f;
+    --accent: #5fb39a;
+    --accent-ink: #0d1f1a;
+    --accent-soft: #1f3530;
+    --warn: #f0a94b;
+    --warn-soft: #3a2b15;
+    --danger: #f28b82;
+    --danger-soft: #3d1d1a;
+    --info: #8ab4f0;
+    --info-soft: #1c2a3d;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* on :root too, so scroll bars are dark in dark mode instead of bright white boxes */
+:root, input, select, textarea {
+  color-scheme: light dark;
+}
+
+/* Printing (e.g. the budget report → Save as PDF): plain black on white, no app chrome */
+@media print {
+  :root {
+    --bg: #ffffff; --surface: #ffffff; --surface-2: #f3f3f1; --ink: #111111; --muted: #555555; --line: #d6d4cf;
+    --accent: #1f5c4c; --accent-ink: #ffffff; --accent-soft: #e6f0ec; --danger: #b42318; --warn: #9a4b00;
+  }
+  body { background: #fff; }
+  @page { margin: 14mm; }
+  .print-break-avoid { break-inside: avoid; }
+}
+
+/* Meal prep (Meal Planner): the box covers the whole area beside the menu. It styles only itself –
+   never the page around it – so no other page is affected, even while Next keeps it hidden in the background. */
+[data-fullbleed] {
+  position: fixed;
+  /* below the phone menu bar: its top padding + the 40px ☰ button + 8px + its 1px border */
+  inset: calc(max(0.5rem, env(safe-area-inset-top)) + 49px) 0 0 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+@media (min-width: 768px) {
+  [data-fullbleed] { inset: 0 0 0 14rem; }   /* beside the 14rem side menu */
+}
+[data-fullbleed] > iframe {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Phones: iPhone Safari draws an empty date or time box with almost no width, so it looks like it isn't there
+   (e.g. a to-do's due date). Give them a proper size on touch screens; computers keep their normal boxes. */
+@media (pointer: coarse) {
+  input[type="date"],
+  input[type="time"] {
+    min-width: min(9.5rem, 100%);   /* never wider than the space it's in */
+    min-height: 2.5rem;
+  }
+  input[type="date"]::-webkit-date-and-time-value,
+  input[type="time"]::-webkit-date-and-time-value {
+    text-align: left;
+  }
+}
+
+/* Phones: the page never moves sideways – only up and down. (Anything meant to scroll sideways, like a row of
+   tabs, scrolls inside its own box.) clip on body keeps the sticky menu bar working. */
+@media (max-width: 767px) {
+  html { overflow-x: hidden; }
+  body { overflow-x: clip; }
+}
+
+/* A grid's columns never grow wider than the screen because of one long line of text (a long bill or event name);
+   the text gets cut off with … instead. */
+@layer base {
+  .grid > * { min-width: 0; }   /* a default: a box that sets its own min-w-… still wins */
+}
+
+/* Phones: text boxes at 16px, so the iPhone doesn't zoom in when you tap one (it does for anything smaller, and
+   then the page sits zoomed in and lopsided). */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,17 @@
+# never bake personal data or local builds into the image
+app-data
+app-data-backup-*
+Data
+node_modules
+.next
+.git
+# …except what says which commit this is (shown in Settings)
+!.git/HEAD
+!.git/refs
+!.git/packed-refs
+.claude
+*.log
+tsconfig.tsbuildinfo
+npm-debug.log*
+.env*
+budget
